@@ -1,0 +1,21 @@
+{
+    "name": "gsons/wx-tools",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "gsonhub",
+            "email": "976955017@qq.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Gsons\\": "src"
+        }
+    },
+    "require": {
+        "php-curl-class/php-curl-class": "^8.3",
+        "monolog/monolog": "^1.24",
+        "phpoffice/phpexcel": "^1.8",
+        "topthink/think-cache": "^1.0"
+    }
+}

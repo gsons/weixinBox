@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <base href="/"/>
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, 'Nimbus Sans L', 'Segoe UI', Arial, 'Liberation Sans', 'Source Han Sans CN', 'Source Han Sans SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Wenquanyi Micro Hei', 'WenQuanYi Zen Hei', 'ST Heiti', SimHei, sans-serif;
+        }
+
+        .wrapper {
+            width: 100%;
+            min-height: 100%;
+            margin: 0 0 -36px;
+            text-align: center;
+        }
+
+        .qr_login {
+            display: inline-block;
+            margin-top: 150px;
+            width: 180px;
+            text-align: center;
+            vertical-align: middle;
+            color: #666;
+        }
+
+        .qr_login p {
+            margin: 5px 0;
+            line-height: 14px;
+        }
+
+        .qr_area {
+            display: inline-block;
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+        }
+
+        .qrcode {
+            display: inline-block;
+            vertical-align: top;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            background: url('http://kagent.applinzi.com/static/img/progress.gif') center center no-repeat;
+            cursor: pointer;
+        }
+
+        .login_success,
+        .qr_invalid {
+            display: none;
+            vertical-align: top;
+            position: relative;
+            top: -150px;
+            width: 150px;
+            height: 150px;
+            margin-bottom: -150px;
+            text-align: center;
+            background: rgba(0, 0, 0, .25);
+            cursor: pointer;
+        }
+
+        .login_success .fa,
+        .qr_invalid .fa {
+            display: inline-block;
+            height: 150px;
+            overflow: hidden;
+            font-size: 80px;
+            line-height: 150px;
+            overflow: hidden;
+        }
+
+        .login_success .fa-check {
+            color: #74C328;
+        }
+
+        .qr_invalid .fa-refresh {
+            color: #F39800;
+        }
+
+        .tips {
+            color: #000;
+        }
+
+        .submit_btn {
+            margin-top: 1.5em;
+        }
+
+        .submit_btn input {
+            display: inline-block;
+            width: 10em;
+            cursor: pointer;
+        }
+
+        .help p {
+            margin: 50px 0;
+        }
+
+        .more span {
+            display: inline-block;
+            margin: 0 .5em;
+        }
+
+        .push {
+            height: 36px;
+        }
+
+        .footer {
+            width: 100%;
+            height: 36px;
+            text-align: center;
+            overflow: hidden;
+            font-size: 12px;
+            color: rgb(153, 153, 153);
+        }
+
+        a,
+        a:link {
+            text-decoration: none;
+            color: rgb(3, 102, 214);
+            cursor: pointer;
+        }
+
+        a:focus {
+            outline: none;
+            outline-style: none;
+            -moz-outline-style: none;
+        }
+
+        a::-moz-focus-inner {
+            border: 0;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .donate {
+            display: inline-block;
+            padding: 0 2em;
+            background: #fd6062;
+            border-radius: 16px;
+            color: #fff !important;
+            font-size: 16px;
+            line-height: 32px;
+        }
+
+        .donate:hover {
+            text-decoration: none !important;
+        }
+    </style>
+    <link href="http://kagent.applinzi.com/static/css/font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet"
+          type="text/css">
+    <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <link href="http://kagent.applinzi.com/static/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+    <meta name="keywords" content="WeChat, 微信, 通讯录, 好友, 联系人, 导出, 工具, 脚本, 应用,PHP, 开源"/>
+    <meta name="description" content="（微信工具箱），导出微信通讯录好友（昵称、备注名、显示名、微信号、性别、省份、城市、签名）"/>
+    <title>微信通讯录导出</title>
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="qr_login">
+        <div id="qr_area" class="qr_area">
+            <img id="qrcode" class="qrcode" src="" alt="" title="点击可刷新" onclick="qrRefresh()"/>
+            <span id="login_success" class="login_success" onclick="qrRefresh()">
+                    <i class="fa fa-check" aria-hidden="true" title="登录成功，点击可刷新"></i>
+                </span>
+            <span id="qr_invalid" class="qr_invalid" onclick="qrRefresh()">
+                    <i class="fa fa-refresh" aria-hidden="true" title="会话失效，请点击刷新"></i>
+                </span>
+        </div>
+        <p id="tips" class="tips">微信扫描二维码</p>
+    </div>
+    <div class="submit_btn">
+        <input id="submit" type="submit" value="导出通讯录" onclick="getContact()"/>
+    </div>
+    <div class="help">
+        <p class="more">
+            <span>
+                <a class="donate" href="javascript:;" target="_blank">♥&nbsp;赞赏支持</a>
+            </span>
+        </p>
+    </div>
+    <div class="push"></div>
+</div>
+<div class="footer">
+    <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp;
+    本应用不会存储任何关于你的隐私信息 &nbsp;
+    &copy; 2018 <a href="https://github.com/gsons" target="_blank">gsons</a>
+</div>
+<script type="text/javascript">
+    function getContact() {
+        var url = '/wx-tool/index.php?action=exportExcel&t=' + (new Date().getTime());
+        window.open(url, "_blank");
+    }
+
+    function changeStatus(status) {
+        switch (status) {
+            case -1:
+                break;
+            case 408:
+                $('#tips').text('二维码认证中...');
+                break;
+            case 201:
+                break;
+            case 200:
+                $('#tips').text('登录成功，点击可刷新');
+                $('#login_success').css('display', 'inline-block');
+                $("#submit").prop("disabled", false);
+                cacheContact();
+                break;
+            default:
+                $('#tips').text('会话失效，请点击刷新');
+                $('#login_success').css('display', 'none');
+                $('#qr_invalid').css('display', 'inline-block');
+                $("#submit").prop("disabled", true);
+        }
+    }
+
+    function cacheContact(){
+        var url = '/wx-tool/index.php?action=cacheContact&t=' + (new Date().getTime());
+        $.ajax({
+            url: url,
+            cache: false,
+            dataType: "json",
+            success: function (obj) {
+                console.log(obj);
+            }
+        });
+    }
+    function qrLoginQuery() {
+        function trigger() {
+            var url = '/wx-tool/index.php?action=checkLogin&t=' + (new Date().getTime());
+            $.ajax({
+                url: url,
+                cache: false,
+                dataType: "json",
+                success: function (obj) {
+                    var status = JSON.parse(JSON.stringify(obj)).status;
+                    changeStatus(status);
+                    if (![-1, 408, 201].includes(status)) {
+                        clearInterval(window.queryTimmer);
+                    }
+                }
+            });
+        }
+
+        window.queryTimmer = setInterval(trigger, 2500);
+    }
+
+    function qrRefresh() {
+        clearInterval(window.queryTimmer);
+        $("#submit").prop("disabled", true);
+        $('#login_success, #qr_invalid').css('display', 'none');
+        $('#tips').text('微信扫描二维码');
+        $('#qrcode').attr('src', '');
+        var src = '/wx-tool/index.php?action=qrCode&_=' + Math.random();
+        $('#qrcode').attr('src', src);
+        qrLoginQuery();
+    }
+
+    (function () {
+        qrRefresh();
+    })();
+</script>
+</body>
+
+</html>
